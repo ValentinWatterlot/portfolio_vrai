@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artivio — Valentin Watterlot</title>
+  <style>
+    @font-face {
+      font-family: 'Archivo';
+      src: url('fonts/Archivo-VariableFont_wdth_wght.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f0f1fa;
+      color: #0a0a0a;
+      -webkit-font-smoothing: antialiased;
+      cursor: none;
+      overflow: hidden;
+    }
+
+    a, button { cursor: none; }
+    ::-webkit-scrollbar { display: none; }
+    * { scrollbar-width: none; }
+
+    /* ─── Custom cursor ─── */
+    #cursor-dot, #cursor-ring {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: transform;
+      z-index: 9999;
+      mix-blend-mode: difference;
+    }
+    #cursor-dot { top: -4px; left: -4px; width: 8px; height: 8px; background: #1a2ffb; }
+    #cursor-ring {
+      top: -16px; left: -16px; width: 32px; height: 32px;
+      border: 1.5px solid #1a2ffb; background: transparent; z-index: 9998;
+      transition: width 0.2s ease, height 0.2s ease, top 0.2s ease, left 0.2s ease;
+    }
+    #cursor-ring.expanded { width: 56px; height: 56px; top: -28px; left: -28px; }
+
+    /* ─── Header ─── */
+    #header {
+      position: fixed;
+      top: 24px; left: 0; right: 0;
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 180px;
+      height: 64px;
+    }
+    #header-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    #header-logo {
+      display: inline-flex; align-items: center; text-decoration: none;
+    }
+    #header-logo img {
+      height: 72px; width: auto; display: block;
+      filter: brightness(0);
+    }
+    #header-logo.is-on-dark img { filter: brightness(0) invert(1); }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    #btn-back {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 18px 30px; border-radius: 9999px;
+      background: #E4E6EF; color: #0a0a0a;
+      font-family: 'Archivo', sans-serif; font-size: 15px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+      position: relative; overflow: hidden;
+      transition: background 0.2s ease;
+    }
+    #btn-back:hover { background: #fff; }
+    #btn-back .btn-back-arrow {
+      position: absolute; left: 30px; top: 50%; display: flex; align-items: center; color: #0a0a0a;
+      transform: translateY(-50%) translateX(calc(-100% - 30px));
+      transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    #btn-back .btn-back-arrow svg { width: 1.15em; height: 1.15em; display: block; }
+    #btn-back:hover .btn-back-arrow { transform: translateY(-50%) translateX(0); }
+    #btn-back .btn-back-text { display: inline-block; transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    #btn-back:hover .btn-back-text { transform: translateX(30px); }
+    #btn-back .btn-back-dot {
+      width: 9px; height: 9px; border-radius: 50%; background: #0a0a0a; flex-shrink: 0;
+      transition: opacity 0.2s ease 0.05s, transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    #btn-back:hover .btn-back-dot { opacity: 0; transform: translateX(12px); }
+
+    #btn-contact {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 18px 30px; border-radius: 9999px;
+      background: #2A2D3E; color: #fff;
+      font-family: 'Archivo', sans-serif; font-size: 16px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
+      position: relative; overflow: hidden; border: none;
+    }
+    #btn-contact .btn-contact-arrow {
+      position: absolute; left: 30px; top: 50%; display: flex; align-items: center; color: #fff;
+      transform: translateY(-50%) translateX(calc(-100% - 30px));
+      transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    #btn-contact .btn-contact-arrow svg { width: 1.15em; height: 1.15em; display: block; }
+    #btn-contact:hover .btn-contact-arrow { transform: translateY(-50%) translateX(0); }
+    #btn-contact .btn-contact-text { display: inline-block; transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    #btn-contact:hover .btn-contact-text { transform: translateX(32px); }
+    #btn-contact .btn-contact-dot {
+      width: 9px; height: 9px; border-radius: 50%; background: #fff; flex-shrink: 0;
+      transition: opacity 0.2s ease 0.05s, transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    #btn-contact:hover .btn-contact-dot { opacity: 0; transform: translateX(12px); }
+
+    #menu-btn {
+      background: #E4E6EF; border: none; padding: 18px 36px 18px 30px; border-radius: 9999px;
+      font-family: 'Archivo', sans-serif; font-size: 16px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.1em; color: #000;
+      display: flex; align-items: center; gap: 12px; transition: background 0.2s;
+    }
+    #menu-btn:hover { background: #fff; }
+    .burger-icon { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 16px; height: 13px; flex-shrink: 0; }
+    .burger-line {
+      display: block; width: 100%; height: 1.5px; background: currentColor; border-radius: 2px; transform-origin: center;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #menu-btn.open .burger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    #menu-btn.open .burger-line:nth-child(2) { opacity: 0; width: 0; }
+    #menu-btn.open .burger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ─── Menu overlay ─── */
+    #menu-overlay {
+      position: fixed; inset: 0; background: #0c0d14; z-index: 300;
+      display: flex; flex-direction: column; justify-content: center; padding: 80px 180px;
+      opacity: 0; pointer-events: none; transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+    #menu-overlay.open { opacity: 1; pointer-events: all; }
+    .menu-nav { display: flex; flex-direction: column; }
+    .menu-link {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 0; border-bottom: 1px solid transparent;
+      font-size: clamp(40px, 6.5vw, 96px); font-weight: 400;
+      color: rgba(255,255,255,0.28); text-decoration: none;
+      text-transform: uppercase; letter-spacing: -0.03em; font-family: 'Archivo', sans-serif;
+      opacity: 0; transform: translateY(36px);
+      transition: color 0.25s ease, border-color 0.25s ease,
+                  opacity 0.5s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    body.menu-is-open #header-logo { animation: menuLogoIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) 0.18s backwards; }
+    @keyframes menuLogoIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+    #menu-overlay.open .menu-link:nth-child(1) { opacity:1; transform:none; transition-delay:0.38s; }
+    #menu-overlay.open .menu-link:nth-child(2) { opacity:1; transform:none; transition-delay:0.52s; }
+    #menu-overlay.open .menu-link:nth-child(3) { opacity:1; transform:none; transition-delay:0.66s; }
+    #menu-overlay.open .menu-link:nth-child(4) { opacity:1; transform:none; transition-delay:0.80s; }
+    .menu-nav:has(.menu-link:hover) .menu-link:not(:hover) { color: rgba(255,255,255,0.1); }
+    .menu-link:hover { color: #fff; border-bottom-color: rgba(255,255,255,0.35); }
+    .menu-link-left { display: flex; align-items: baseline; gap: 16px; }
+    .menu-link .num { font-size: 13px; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.35); letter-spacing: 0; flex-shrink: 0; }
+    .menu-link-text { display: block; }
+    .menu-arrow { font-size: 22px; color: rgba(255,255,255,0.6); opacity: 0; transform: translate(-6px, 6px); transition: opacity 0.25s ease, transform 0.25s ease; flex-shrink: 0; }
+    .menu-link:hover .menu-arrow { opacity: 1; transform: none; }
+    .menu-socials { position: absolute; bottom: 64px; right: 180px; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease 0.96s, transform 0.5s ease 0.96s; }
+    #menu-overlay.open .menu-socials { opacity: 1; transform: none; }
+    #menu-overlay.open.closing { opacity: 0; pointer-events: none; transition: opacity 0.22s ease 0.58s; }
+    #menu-overlay.open.closing .menu-link { opacity: 0; transform: translateY(36px); }
+    #menu-overlay.open.closing .menu-link:nth-child(4) { transition-delay: 0.06s; }
+    #menu-overlay.open.closing .menu-link:nth-child(3) { transition-delay: 0.18s; }
+    #menu-overlay.open.closing .menu-link:nth-child(2) { transition-delay: 0.30s; }
+    #menu-overlay.open.closing .menu-link:nth-child(1) { transition-delay: 0.42s; }
+    #menu-overlay.open.closing .menu-socials { opacity: 0; transform: translateY(12px); transition: opacity 0.25s ease 0s, transform 0.25s ease 0s; }
+    body.menu-closing #header-logo { animation: menuLogoOut 0.3s ease 0.48s forwards; }
+    @keyframes menuLogoOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-10px); } }
+    .menu-socials-label { font-family: 'Archivo', sans-serif; font-size: 22px; font-weight: 400; color: rgba(255,255,255,0.4); }
+    .menu-socials-icons { display: flex; gap: 12px; align-items: center; }
+    .social-icon { width: 64px; height: 64px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.45); transition: color 0.2s, border-color 0.2s, background 0.2s; text-decoration: none; }
+    .social-icon svg { width: 28px; height: 28px; }
+    .social-icon:hover { color: #fff; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.07); }
+
+    /* ═══ BARRE DE PROGRESSION ═══ */
+    #h-progress {
+      position: fixed; bottom: 0; left: 0;
+      height: 2px; width: 0%;
+      background: #1a2ffb; z-index: 500;
+      pointer-events: none; border-radius: 0 2px 2px 0;
+    }
+
+    /* ═══ SCROLL HORIZONTAL ═══ */
+    #h-outer {
+      position: fixed;
+      top: 88px; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+    }
+    #h-track {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      will-change: transform;
+      gap: 24px;
+      padding-left: 38vw;
+    }
+
+    /* Panneau info — fixe au-dessus du scroll */
+    .h-info {
+      position: absolute;
+      top: 0; left: 0;
+      width: 38vw; height: 100%;
+      display: flex; align-items: center;
+      padding: 0 48px 0 180px;
+      background: #f0f1fa;
+      z-index: 10;
+    }
+    .h-info-inner { display: flex; flex-direction: column; width: 100%; }
+
+    .project-index {
+      font-size: 12px; font-style: italic; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(10,10,10,0.38);
+      margin-bottom: 28px; display: block;
+    }
+    .project-title {
+      font-size: clamp(40px, 4.2vw, 72px); font-weight: 400;
+      letter-spacing: -0.03em; line-height: 1.0;
+      color: #0a0a0a; margin-bottom: 32px;
+    }
+    .project-desc {
+      font-size: 16px; line-height: 1.72;
+      color: rgba(10,10,10,0.6); margin-bottom: 40px; max-width: 340px;
+    }
+
+    /* Bouton maquette */
+    .btn-maquette {
+      display: inline-flex; align-items: center; gap: 14px;
+      padding: 18px 32px; border-radius: 9999px;
+      background: #0a0a0a; color: #fff;
+      font-family: 'Archivo', sans-serif; font-size: 14px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+      width: fit-content; position: relative; overflow: hidden; isolation: isolate;
+      margin-bottom: 48px;
+    }
+    .btn-maquette::before {
+      content: ''; position: absolute; left: 36px; top: 50%;
+      width: 8px; height: 8px; border-radius: 50%; background: #1a2ffb;
+      transform: translate(-50%, -50%) scale(1);
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 0;
+    }
+    .btn-maquette:hover::before { transform: translate(-50%, -50%) scale(80); }
+    .btn-maquette > * { position: relative; z-index: 1; }
+    .btn-maquette-dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; flex-shrink: 0; transition: opacity 0.12s ease; }
+    .btn-maquette:hover .btn-maquette-dot { opacity: 0; }
+    .btn-maquette-text { transition: color 0.12s ease 0.22s; }
+    .btn-maquette-arrow { opacity: 0; color: #fff; transform: translateX(-8px); transition: opacity 0.3s ease 0.44s, transform 0.3s ease 0.44s; display: flex; align-items: center; }
+    .btn-maquette-arrow svg { width: 1.15em; height: 1.15em; display: block; }
+    .btn-maquette:hover .btn-maquette-arrow { opacity: 1; transform: none; }
+
+    /* Séparateur + meta */
+    .h-info-divider { width: 100%; height: 1px; background: rgba(10,10,10,0.1); margin-bottom: 32px; }
+    .h-meta { display: flex; gap: 32px; }
+    .meta-group { display: flex; flex-direction: column; gap: 10px; }
+    .meta-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(10,10,10,0.38); }
+    .meta-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .meta-list li { font-size: 13px; color: #0a0a0a; line-height: 1.4; }
+    .meta-link { color: #0a0a0a; text-decoration: none; border-bottom: 1px solid rgba(10,10,10,0.3); transition: border-color 0.2s, color 0.2s; }
+    .meta-link:hover { color: #1a2ffb; border-color: #1a2ffb; }
+
+    /* Éléments showcase */
+    #h-video-wrap {
+      flex-shrink: 0; width: 76vw; height: 78vh;
+      border-radius: 22px; overflow: hidden;
+    }
+    #h-video-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .h-img-wide {
+      flex-shrink: 0; width: 50vw; height: 72vh;
+      border-radius: 22px; background: #111;
+      position: relative; overflow: hidden;
+    }
+    .h-img-wide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .h-logo-video {
+      flex-shrink: 0; width: 42vw; height: 72vh;
+      border-radius: 22px; background: #111;
+      position: relative; overflow: hidden;
+    }
+    .h-logo-video img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .h-img-pair {
+      flex-shrink: 0; width: 40vw; height: 72vh;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .h-img-pair-item {
+      flex: 1; border-radius: 22px; background: #e8eaf2;
+      position: relative; overflow: hidden;
+    }
+    .h-img-pair-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .h-text {
+      flex-shrink: 0; width: 52vw; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 72px;
+    }
+    .h-text-inner { max-width: 520px; }
+    .h-text-label {
+      display: block; font-size: 14px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(10,10,10,0.45); margin-bottom: 28px;
+    }
+    .h-text-body {
+      font-size: clamp(17px, 1.55vw, 22px); font-weight: 400;
+      line-height: 1.72; color: #0a0a0a; letter-spacing: 0.01em;
+    }
+
+    .h-text--large { width: 68vw; padding: 0 80px; overflow-y: auto; }
+    .h-text--large .h-text-inner { max-width: 720px; }
+    .h-text--large .h-text-body { font-size: clamp(14px, 1.1vw, 17px); line-height: 1.8; }
+
+    .h-img-large {
+      flex-shrink: 0; width: auto; min-width: 40vw; height: 72vh;
+      border-radius: 22px; background: #c8cad8;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .h-img-large img { height: 100%; width: auto; object-fit: contain; display: block; }
+
+    .h-logos-grid {
+      flex-shrink: 0; width: 60vw; height: 72vh;
+      display: flex; gap: 16px; border-radius: 22px; overflow: hidden;
+    }
+    .h-logos-col { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+    .h-logos-col--right { justify-content: center; }
+    .h-logo-box {
+      flex: 1; border-radius: 18px; background: transparent;
+      display: flex; align-items: center; justify-content: center; padding: 40px;
+    }
+    .h-logos-col--right .h-logo-box { flex: unset; height: 100%; }
+    .h-logo-box img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+
+    .h-img-trio {
+      flex-shrink: 0; width: 42vw; height: 50vh;
+      display: flex; flex-direction: row; gap: 16px;
+    }
+    .h-img-trio-col { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+    .h-img-trio-col--right { justify-content: center; }
+    .h-img-trio-item { flex: 1; border-radius: 18px; overflow: hidden; background: transparent; }
+    .h-img-trio-col--right .h-img-trio-item { flex: unset; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .h-img-trio-item img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .h-img-trio-col--right .h-img-trio-item img { width: auto !important; height: 50% !important; object-fit: contain !important; }
+
+    /* Panneau fin */
+    .h-end {
+      flex-shrink: 0; width: 42vw; min-width: 360px; height: 100%;
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+      padding: 0 32px 0 48px; gap: 0; position: relative; overflow: hidden;
+    }
+    .h-end-next-name {
+      font-size: clamp(52px, 7vw, 110px); font-weight: 700;
+      letter-spacing: -0.04em; line-height: 1;
+      color: rgba(10,10,10,0.08); white-space: nowrap;
+      margin-bottom: 40px; pointer-events: none; user-select: none;
+    }
+    .btn-end-back {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 18px 32px; border-radius: 9999px;
+      background: #0a0a0a; color: #fff;
+      font-family: 'Archivo', sans-serif; font-size: 14px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+      transition: background 0.25s ease;
+    }
+    .btn-end-back:hover { background: #2a2d3e; }
+
+    /* Hint scroll */
+    #scroll-hint {
+      position: fixed; bottom: 28px; right: 180px;
+      display: flex; align-items: center; gap: 10px;
+      opacity: 1; transition: opacity 0.5s ease;
+      pointer-events: none; z-index: 100;
+    }
+    #scroll-hint.hidden { opacity: 0; }
+    .scroll-hint-label { font-family: 'Archivo', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10,10,10,0.4); }
+    .scroll-hint-arrow { display: flex; align-items: center; animation: hintPulse 1.8s ease-in-out infinite; }
+    .scroll-hint-arrow svg { width: 20px; height: 20px; color: rgba(10,10,10,0.4); }
+    @keyframes hintPulse {
+      0%, 100% { transform: translateX(0); opacity: 0.4; }
+      50%       { transform: translateX(6px); opacity: 1; }
+    }
+
+    /* Entrance animations */
+    .project-index, .project-title, .project-desc, .btn-maquette, .h-info-divider, .meta-group {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    #h-video-wrap {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .is-page-loaded .project-index    { opacity: 1; transform: none; transition-delay: 0.08s; }
+    .is-page-loaded .project-title    { opacity: 1; transform: none; transition-delay: 0.20s; }
+    .is-page-loaded .project-desc     { opacity: 1; transform: none; transition-delay: 0.34s; }
+    .is-page-loaded .btn-maquette     { opacity: 1; transform: none; transition-delay: 0.46s; }
+    .is-page-loaded .h-info-divider   { opacity: 1; transform: none; transition-delay: 0.52s; }
+    .is-page-loaded .meta-group:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.56s; }
+    .is-page-loaded .meta-group:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.64s; }
+    .is-page-loaded .meta-group:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.72s; }
+    .is-page-loaded .meta-group:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.80s; }
+    .is-page-loaded .meta-group:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.88s; }
+    .is-page-loaded #h-video-wrap     { opacity: 1; transform: none; transition-delay: 0.12s; }
+
+    /* Animations scroll (éléments du track) */
+    .h-text, .h-img-large, .h-img-wide, .h-img-pair, .h-logos-grid, .h-img-trio {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .h-text.is-visible, .h-img-large.is-visible, .h-img-wide.is-visible,
+    .h-img-pair.is-visible, .h-logos-grid.is-visible, .h-img-trio.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      body { overflow: auto; }
+      #h-outer { position: relative; top: auto; left: auto; right: auto; bottom: auto; overflow: visible; }
+      #h-track { flex-direction: column; align-items: stretch; height: auto; gap: 20px; transform: none !important; padding: 0 80px 120px; }
+      #h-progress { display: none; }
+      #scroll-hint { display: none; }
+      .h-info { position: relative; top: auto; left: auto; width: 100%; height: auto; padding: 100px 80px 40px; align-items: center; justify-content: center; background: transparent; z-index: auto; }
+      .h-info-inner { width: 100%; max-width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .h-info-inner .project-desc { max-width: 100%; }
+      .h-info-inner .h-meta { justify-content: center; }
+      .h-info-inner .h-info-divider { width: 100%; }
+      #h-video-wrap { width: 100%; height: 65vh; }
+      .h-text       { width: 100% !important; height: auto; padding: 40px 16px !important; border-radius: 16px; }
+      .h-text-inner { max-width: 100% !important; width: 100% !important; }
+      .meta-list { gap: 16px !important; }
+      .h-img-wide   { width: 100%; height: 55vh; }
+      .h-logo-video { width: 100%; height: 55vh; }
+      .h-img-large  { width: 100%; height: 55vh; }
+      .h-img-logo   { height: 35vh !important; margin-bottom: 40px; }
+      .h-img-pair   { width: 100%; height: auto; flex-direction: row; }
+      .h-img-pair-item { height: 45vh; }
+      .h-end { width: 100%; padding: 40px 0 0; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: auto; }
+      #header { padding: 0 80px; }
+      #btn-contact { display: none; }
+      #menu-overlay { padding: 80px 80px; }
+      .menu-socials { right: 80px; }
+    }
+    @media (max-width: 768px) {
+      #header { padding: 0 24px; }
+      #menu-overlay { padding: 80px 24px; }
+      .menu-socials { right: 24px; }
+      .menu-link { font-size: clamp(36px, 10vw, 64px); padding: 16px 0; }
+      .h-info { padding: 100px 24px 40px; }
+      #h-track { padding: 0 24px 100px; }
+      #btn-back { display: none; }
+      .h-img-pair { flex-direction: column; height: auto; }
+      .h-img-pair-item { height: 42vh; }
+      .h-text-inner p, .h-text-body, .project-desc { font-size: 16px !important; }
+    }
+    @media (max-width: 1280px) and (min-width: 1025px) {
+      #header { padding: 0 120px; }
+      .h-info { padding: 0 40px 0 120px; }
+      #menu-overlay { padding: 80px 120px; }
+      .menu-socials { right: 120px; }
+      #scroll-hint { right: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <header id="header">
+    <a href="index.html" id="header-logo"><img src="uploads/logo.svg" alt="Valentin Watterlot" /></a>
+    <div id="header-center">
+      <a href="projets.html" id="btn-back">
+        <span class="btn-back-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg></span>
+        <span class="btn-back-text">Projets</span>
+        <span class="btn-back-dot"></span>
+      </a>
+    </div>
+    <div class="header-right">
+      <a href="contact.html" id="btn-contact">
+        <span class="btn-contact-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span>
+        <span class="btn-contact-text">Contact</span>
+        <span class="btn-contact-dot"></span>
+      </a>
+      <button id="menu-btn" aria-label="Ouvrir le menu">
+        <span class="burger-icon">
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+        </span>
+        <span class="menu-label">Menu</span>
+      </button>
+    </div>
+  </header>
+
+  <div id="menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation">
+    <nav class="menu-nav">
+      <a href="index.html#hero" class="menu-link" data-menu-link>
+        <span class="menu-link-left"><span class="num">(01)</span><span class="menu-link-text">Accueil</span></span>
+        <span class="menu-arrow">↗</span>
+      </a>
+      <a href="apropos.html" class="menu-link" data-menu-link>
+        <span class="menu-link-left"><span class="num">(02)</span><span class="menu-link-text">À propos</span></span>
+        <span class="menu-arrow">↗</span>
+      </a>
+      <a href="projets.html" class="menu-link" data-menu-link>
+        <span class="menu-link-left"><span class="num">(03)</span><span class="menu-link-text">Projets</span></span>
+        <span class="menu-arrow">↗</span>
+      </a>
+      <a href="contact.html" class="menu-link" data-menu-link>
+        <span class="menu-link-left"><span class="num">(04)</span><span class="menu-link-text">Contact</span></span>
+        <span class="menu-arrow">↗</span>
+      </a>
+    </nav>
+    <div class="menu-socials">
+      <span class="menu-socials-label">Suivez-moi</span>
+      <div class="menu-socials-icons">
+        <a href="https://www.linkedin.com/in/valentin-watterlot/" target="_blank" rel="noopener" class="social-icon" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="h-progress"></div>
+
+  <div id="scroll-hint">
+    <span class="scroll-hint-label">Scroll</span>
+    <span class="scroll-hint-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+    </span>
+  </div>
+
+  <!-- ═══════ SCROLL HORIZONTAL ═══════ -->
+  <div id="h-outer">
+
+    <!-- ── Panneau info (fixe, hors du track) ── -->
+    <div class="h-info">
+      <div class="h-info-inner">
+        <h1 class="project-title">Artivio</h1>
+        <p class="project-desc">
+          L'idée est de promouvoir une exposition existante en la liant à une course sur route, transformant ainsi chaque coureur en ambassadeur d'une œuvre d'art.
+        </p>
+        <a href="https://www.figma.com/design/uq7H356HZJjOKvuyvUzCAb/Artivio?node-id=0-1&p=f&t=krJWSRXDHlE2ccXG-0" target="_blank" rel="noopener noreferrer" class="btn-maquette">
+          <span class="btn-maquette-dot"></span>
+          <span class="btn-maquette-text">Voir la maquette</span>
+          <span class="btn-maquette-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span>
+        </a>
+        <div class="h-info-divider"></div>
+        <div class="h-meta">
+          <div class="meta-group">
+            <span class="meta-label">Services</span>
+            <ul class="meta-list">
+              <li>Branding</li>
+              <li>UX/UI</li>
+              <li>Logo</li>
+              <li>Site web</li>
+            </ul>
+          </div>
+          <div class="meta-group">
+            <span class="meta-label">Outils</span>
+            <ul class="meta-list">
+              <li>Figma</li>
+            </ul>
+          </div>
+          <div class="meta-group">
+            <span class="meta-label">Année</span>
+            <ul class="meta-list">
+              <li>2025</li>
+            </ul>
+          </div>
+          <div class="meta-group">
+            <span class="meta-label">Liens</span>
+            <ul class="meta-list">
+              <li><a href="https://www.figma.com/proto/uq7H356HZJjOKvuyvUzCAb/Artivio?node-id=14-55&p=f&viewport=509%2C212%2C0.05&t=YmOElHKc0fO4MjTK-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=14%3A55&page-id=0%3A1" target="_blank" rel="noopener noreferrer" class="meta-link">Voir le prototype ↗</a></li>
+              <li><a href="https://www.figma.com/design/uq7H356HZJjOKvuyvUzCAb/Artivio?node-id=0-1&p=f&t=krJWSRXDHlE2ccXG-0" target="_blank" rel="noopener noreferrer" class="meta-link">Voir la maquette ↗</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="h-track">
+
+      <!-- ── Image principale ── -->
+      <div id="h-video-wrap">
+        <img src="uploads/artivio/mockup%20artivio.png" alt="Mockup Artivio">
+      </div>
+
+      <!-- ── Texte Logo ── -->
+      <div class="h-text">
+        <div class="h-text-inner">
+          <span class="h-text-label">Logo</span>
+          <p class="h-text-body">Le logo d'Artivio allie couleurs vives pour symboliser énergie et créativité, avec une police glitch moderne qui évoque le mouvement. Il reflète la fusion entre sport et art, faisant de chaque course une œuvre dynamique et unique.</p>
+        </div>
+      </div>
+
+      <!-- ── Image logo ── -->
+      <div class="h-img-large h-img-logo" style="background: transparent; height: 55vh;">
+        <img src="uploads/artivio/logo%20artivio.png" alt="Logo Artivio">
+      </div>
+
+      <!-- ── Texte Maquette ── -->
+      <div class="h-text" style="width: 68vw; padding: 0 80px;">
+        <div class="h-text-inner" style="max-width: 720px;">
+          <span class="h-text-label">Maquette</span>
+          <p class="h-text-body">La maquette du site offre une expérience visuelle fluide et immersive, conçue pour mettre en valeur la fusion entre l'art et la course à pied. Avec un design épuré et moderne, l'interface guide naturellement l'utilisateur à travers les différentes sections, facilitant l'exploration et la compréhension du concept. L'identité visuelle joue sur un équilibre entre dynamisme et esthétisme, renforçant l'engagement des visiteurs.</p>
+        </div>
+      </div>
+
+      <!-- ── Image maquette ── -->
+      <div class="h-img-large" style="height: 88vh; background: transparent;">
+        <img src="uploads/artivio/mockup%20maquette%20artivio.png" alt="Mockup maquette Artivio">
+      </div>
+
+      <!-- ── Texte L'affiche ── -->
+      <div class="h-text" style="width: 72vw; padding: 0 80px;">
+        <div class="h-text-inner" style="max-width: 760px;">
+          <span class="h-text-label">L'affiche</span>
+          <p class="h-text-body">Cette affiche illustre parfaitement le concept d'Artivio, fusionnant sport et art pour promouvoir le Marathon de Paris 2025.<br><br>L'athlète en mouvement symbolise l'énergie et l'engagement des coureurs, tandis que les couleurs vives et la typographie moderne rappellent l'aspect artistique du projet. Les informations essentielles sont mises en avant de façon claire et percutante, attirant l'attention des participants. En bas, le logo et l'appel à l'inscription renforcent le rôle d'Artivio en tant qu'intermédiaire entre la course et l'exposition partenaire, transformant chaque dossard en une œuvre d'art vivante.</p>
+        </div>
+      </div>
+
+      <!-- ── Image affiche ── -->
+      <div class="h-img-large" style="height: 75vh; background: transparent;">
+        <img src="uploads/artivio/affiche.png" alt="Affiche Artivio">
+      </div>
+
+      <!-- ── Panneau fin ── -->
+      <div class="h-end">
+        <p class="h-end-next-name">Worldline</p>
+        <a href="worldline.html" class="btn-end-back">
+          Voir le projet
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+// ─── Custom cursor ───
+(function() {
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let px = -100, py = -100, rx = -100, ry = -100;
+  window.addEventListener('mousemove', e => {
+    px = e.clientX; py = e.clientY;
+    dot.style.transform = `translate(${px}px,${py}px)`;
+  });
+  (function tick() {
+    rx += (px - rx) * 0.12; ry += (py - ry) * 0.12;
+    ring.style.transform = `translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(tick);
+  })();
+  document.addEventListener('mouseover', e => {
+    ring.classList.toggle('expanded', !!e.target.closest('a,button'));
+  });
+})();
+
+// ─── Menu ───
+(function() {
+  const overlay = document.getElementById('menu-overlay');
+  const btn     = document.getElementById('menu-btn');
+  const links   = document.querySelectorAll('[data-menu-link]');
+  let timer = null;
+  const open  = () => { clearTimeout(timer); overlay.classList.remove('closing'); document.body.classList.remove('menu-closing'); overlay.classList.add('open'); btn.classList.add('open'); document.body.classList.add('menu-is-open'); };
+  const close = () => { btn.classList.remove('open'); document.body.classList.remove('menu-is-open'); document.body.classList.add('menu-closing'); overlay.classList.add('closing'); timer = setTimeout(() => { overlay.classList.remove('open','closing'); document.body.classList.remove('menu-closing'); }, 850); };
+  btn.addEventListener('click', () => overlay.classList.contains('open') ? close() : open());
+  links.forEach(l => l.addEventListener('click', close));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+
+// ─── Entrance animation ───
+(function() {
+  requestAnimationFrame(() => {
+    setTimeout(() => document.body.classList.add('is-page-loaded'), 80);
+  });
+})();
+
+// ─── Scroll horizontal (desktop uniquement) ───
+(function() {
+  if (window.innerWidth <= 1024) return;
+
+  const track    = document.getElementById('h-track');
+  const outer    = document.getElementById('h-outer');
+  const progress = document.getElementById('h-progress');
+  const hint     = document.getElementById('scroll-hint');
+  if (!track || !outer) return;
+
+  let cur = 0, tgt = 0, max = 0, hintHidden = false;
+
+  const computeMax = () => { max = Math.max(0, track.scrollWidth - outer.clientWidth); };
+  computeMax();
+  window.addEventListener('load', () => { computeMax(); });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 1024) return;
+    computeMax(); tgt = Math.min(tgt, max);
+  });
+
+  const onWheel = e => {
+    if (window.innerWidth <= 1024) return;
+    e.preventDefault();
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    tgt = Math.max(0, Math.min(max, tgt + delta * 1.1));
+  };
+  window.addEventListener('wheel', onWheel, { passive: false });
+
+  let tx = 0;
+  window.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  window.addEventListener('touchmove', e => {
+    if (window.innerWidth <= 1024) return;
+    const dx = tx - e.touches[0].clientX; tx = e.touches[0].clientX;
+    tgt = Math.max(0, Math.min(max, tgt + dx));
+  }, { passive: true });
+
+  document.addEventListener('keydown', e => {
+    if (window.innerWidth <= 1024) return;
+    const step = 100;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); tgt = Math.min(max, tgt + step); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); tgt = Math.max(0, tgt - step); }
+  });
+
+  const tick = () => {
+    cur += (tgt - cur) * 0.09;
+    if (Math.abs(tgt - cur) < 0.05) cur = tgt;
+    track.style.transform = `translate3d(${-cur}px, 0, 0)`;
+    if (progress) progress.style.width = max > 0 ? `${(cur / max) * 100}%` : '0%';
+    if (!hintHidden && cur > 20) { hintHidden = true; if (hint) hint.classList.add('hidden'); }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();
+
+// ─── Animations d'entrée au scroll ───
+(function() {
+  const targets = document.querySelectorAll('.h-text, .h-img-large, .h-img-wide, .h-img-pair, .h-logos-grid, .h-img-trio');
+  if (!targets.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = '0.05s';
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  targets.forEach(el => observer.observe(el));
+})();
+</script>
+</body>
+</html>
