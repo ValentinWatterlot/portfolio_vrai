@@ -116,6 +116,7 @@
       transition: color 0.25s ease, border-color 0.25s ease, opacity 0.5s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
     }
     body.menu-is-open #header-logo { animation: menuLogoIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) 0.18s backwards; }
+    body.menu-is-open #header-logo img { filter: brightness(0) invert(1); }
     @keyframes menuLogoIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
     #menu-overlay.open .menu-link:nth-child(1) { opacity:1; transform:none; transition-delay:0.38s; }
     #menu-overlay.open .menu-link:nth-child(2) { opacity:1; transform:none; transition-delay:0.52s; }
@@ -246,6 +247,10 @@
     .is-page-loaded .meta-group:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.80s; }
     .is-page-loaded #h-video-wrap     { opacity: 1; transform: none; transition-delay: 0.12s; }
 
+    .h-img-duo { flex-shrink: 0; display: flex; flex-direction: row; gap: 16px; height: 78vh; }
+    .h-img-duo-item { border-radius: 22px; overflow: hidden; height: 100%; width: auto; }
+    .h-img-duo-item img { height: 100%; width: auto; object-fit: cover; display: block; }
+
     @media (max-width: 1024px) {
       body { overflow: auto; }
       #h-outer { position: relative; top: auto; left: auto; right: auto; bottom: auto; overflow: visible; }
@@ -254,11 +259,15 @@
       .h-info { width: 100%; height: auto; padding: 0; align-items: flex-start; }
       .h-info-inner { width: 100%; max-width: 600px; }
       #h-video-wrap { width: 100%; height: 65vh; }
-      .h-text { width: 100%; height: auto; padding: 60px 40px; border-radius: 16px; }
+      .h-text { width: 100% !important; height: auto; padding: 40px 16px !important; border-radius: 16px; }
+      .h-text-inner { max-width: 100% !important; width: 100% !important; }
       .meta-list { gap: 16px !important; }
       .h-img-wide { width: 100%; height: 55vh; } .h-logo-video { width: 100%; height: 55vh; }
       .h-img-large { width: 100%; height: 55vh; }
       .h-img-pair { width: 100%; height: auto; flex-direction: row; } .h-img-pair-item { height: 45vh; }
+      .h-img-duo { width: 100%; height: auto; flex-direction: column; }
+      .h-img-duo-item { width: 100%; height: 55vh; }
+      .h-img-duo-item img { width: 100%; height: 100%; object-fit: cover; }
       .h-end { width: 100%; padding: 40px 0 0; flex-direction: column; align-items: flex-start; height: auto; }
       #header { padding: 0 80px; } #btn-contact { display: none; }
       #menu-overlay { padding: 80px 80px; } .menu-socials { right: 80px; }
@@ -269,6 +278,7 @@
       #h-track { padding: 100px 24px 100px; }
       #btn-back { display: none; }
       .h-img-pair { flex-direction: column; height: auto; } .h-img-pair-item { height: 42vh; }
+      .h-img-duo { flex-direction: column; } .h-img-duo-item { width: 100%; height: 45vh; }
       .h-text-inner p, .h-text-body, .project-desc { font-size: 16px !important; }
     }
     @media (max-width: 1280px) and (min-width: 1025px) {
@@ -395,7 +405,82 @@
 
       <!-- ── Image principale ── -->
       <div id="h-video-wrap">
-        <img src="uploads/worldline/mockup-worldline.png" alt="Mockup Worldline">
+        <img src="uploads/worldline/worldline mockup.webp" alt="Mockup Worldline">
+      </div>
+
+      <!-- ── Texte Recherche ── -->
+      <div class="h-text">
+        <div class="h-text-inner">
+          <span class="h-text-label">Recherche & Analyse Légale</span>
+          <p class="h-text-body">Le processus débute par une phase d'immersion où j'étudie les réglementations et contraintes juridiques spécifiques au secteur ciblé (ex: exigences de conformité pour le secteur bancaire, la santé ou les jeux en ligne).</p>
+        </div>
+      </div>
+
+      <!-- ── Images jeux en ligne ── -->
+      <div class="h-img-duo">
+        <div class="h-img-duo-item">
+          <img src="uploads/worldline/jeux en ligne.webp" alt="Jeux en ligne">
+        </div>
+        <div class="h-img-duo-item">
+          <img src="uploads/worldline/mockup-wallet-jeux-en-ligne.webp" alt="Mockup Wallet Jeux en ligne">
+        </div>
+      </div>
+
+      <!-- ── Texte Définition du Parcours ── -->
+      <div class="h-text">
+        <div class="h-text-inner">
+          <span class="h-text-label">Définition du Parcours</span>
+          <p class="h-text-body">Je cartographie ensuite le parcours utilisateur sous forme de User Flows afin d'identifier le moment exact et la manière dont les données de l'EUDI Wallet seront sollicitées, en veillant à minimiser la friction de part et d'autre.</p>
+        </div>
+      </div>
+
+      <!-- ── Image Portail de démo ── -->
+      <div class="h-img-large" style="background:#1a1a2e;">
+        <img src="uploads/worldline/Mockup-portail-de-démo.webp" alt="Mockup Portail de démo">
+      </div>
+
+      <!-- ── Texte Maquettage & Conception ── -->
+      <div class="h-text">
+        <div class="h-text-inner">
+          <span class="h-text-label">Maquettage & Conception</span>
+          <p class="h-text-body">Je passe à la phase de création visuelle sur Figma en concevant l'interface du site demandeur (B2B) et les écrans de validation de l'application mobile (B2C), tout en garantissant une expérience fluide, accessible et rassurante.</p>
+        </div>
+      </div>
+
+      <!-- ── Images Hotel AI ── -->
+      <div class="h-img-duo">
+        <div class="h-img-duo-item">
+          <img src="uploads/worldline/mockup-hotelai.webp" alt="Mockup Hotel AI">
+        </div>
+        <div class="h-img-duo-item">
+          <img src="uploads/worldline/mockup wallet hotelai.jpg" alt="Mockup Wallet Hotel AI">
+        </div>
+      </div>
+
+      <!-- ── Texte Prototypage & Validation ── -->
+      <div class="h-text">
+        <div class="h-text-inner">
+          <span class="h-text-label">Prototypage & Validation</span>
+          <p class="h-text-body">Je transforme ces maquettes en prototypes interactifs animés. Ce support me permet de tester la solution et de la soumettre à la validation de la Product Manager pour m'assurer de l'alignement avec la vision produit.</p>
+        </div>
+      </div>
+
+      <!-- ── Images Youth Pass ── -->
+      <div class="h-img-duo">
+        <div class="h-img-duo-item">
+          <img src="uploads/worldline/mockup-youth-pass.webp" alt="Mockup Youth Pass">
+        </div>
+        <div class="h-img-duo-item">
+          <img src="uploads/worldline/mockup-wallet-youth-pass.webp" alt="Mockup Wallet Youth Pass">
+        </div>
+      </div>
+
+      <!-- ── Texte Handoff Technique ── -->
+      <div class="h-text">
+        <div class="h-text-inner">
+          <span class="h-text-label">Handoff Technique</span>
+          <p class="h-text-body">Une fois le cas d'usage validé, je transmets aux trois développeurs, que j'accompagne si besoin durant la phase d'intégration pour garantir la fidélité de l'interface finale au sein du portail de démonstration.</p>
+        </div>
       </div>
 
       <!-- ── Panneau fin ── -->

@@ -116,6 +116,7 @@
       transition: color 0.25s ease, border-color 0.25s ease, opacity 0.5s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
     }
     body.menu-is-open #header-logo { animation: menuLogoIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) 0.18s backwards; }
+    body.menu-is-open #header-logo img { filter: brightness(0) invert(1); }
     @keyframes menuLogoIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
     #menu-overlay.open .menu-link:nth-child(1) { opacity:1; transform:none; transition-delay:0.38s; }
     #menu-overlay.open .menu-link:nth-child(2) { opacity:1; transform:none; transition-delay:0.52s; }

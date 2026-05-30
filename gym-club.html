@@ -75,6 +75,7 @@
     .menu-nav { display: flex; flex-direction: column; }
     .menu-link { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid transparent; font-size: clamp(40px, 6.5vw, 96px); font-weight: 400; color: rgba(255,255,255,0.28); text-decoration: none; text-transform: uppercase; letter-spacing: -0.03em; font-family: 'Archivo', sans-serif; opacity: 0; transform: translateY(36px); transition: color 0.25s ease, border-color 0.25s ease, opacity 0.5s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94); }
     body.menu-is-open #header-logo { animation: menuLogoIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) 0.18s backwards; }
+    body.menu-is-open #header-logo img { filter: brightness(0) invert(1); }
     @keyframes menuLogoIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
     #menu-overlay.open .menu-link:nth-child(1) { opacity:1; transform:none; transition-delay:0.38s; }
     #menu-overlay.open .menu-link:nth-child(2) { opacity:1; transform:none; transition-delay:0.52s; }
