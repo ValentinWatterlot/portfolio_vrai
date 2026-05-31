@@ -428,7 +428,20 @@
       height: 100%;
       object-fit: cover;
       will-change: transform;
+      transition: opacity 0.3s ease;
     }
+    .project-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: inherit;
+    }
+    .project-card:has(.project-video):hover .project-video { opacity: 1; }
+    .project-card:has(.project-video):hover .project-image { opacity: 0; }
     .project-cats {
       font-family: 'Archivo', sans-serif;
       font-size: 12px;
@@ -743,6 +756,9 @@
           <a href="anonymat.html" class="project-card">
             <div class="project-image-wrap">
               <img src="uploads/anonymat/mockup-site-web-anonymat.webp" alt="Anonymat restaurant" class="project-image" onerror="this.style.display='none'" />
+              <video class="project-video" muted loop playsinline preload="none">
+                <source src="uploads/anonymat/Anonymat Restaurant dans le noir.mp4" type="video/mp4">
+              </video>
             </div>
             <div class="project-cats">Branding • Logo • UX/UI • Site web</div>
             <h3 class="project-name"><span class="project-name-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span><span class="project-name-mask"><span class="project-name-text">Anonymat restaurant</span></span></h3>
@@ -750,6 +766,9 @@
           <a href="kodea.html" class="project-card">
             <div class="project-image-wrap">
               <img src="uploads/screen%20kodea.png" alt="Kodea" class="project-image" onerror="this.style.display='none'" />
+              <video class="project-video" muted loop playsinline preload="none">
+                <source src="uploads/kodea/kodea-site.mp4" type="video/mp4">
+              </video>
             </div>
             <div class="project-cats">Branding • UX/UI • Site web</div>
             <h3 class="project-name"><span class="project-name-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span><span class="project-name-mask"><span class="project-name-text">Kodea</span></span></h3>
@@ -757,6 +776,9 @@
           <a href="artivio.html" class="project-card">
             <div class="project-image-wrap">
               <img src="uploads/artivio/screen-artivio.webp" alt="Artivio" class="project-image" onerror="this.style.display='none'" />
+              <video class="project-video" muted loop playsinline preload="none">
+                <source src="uploads/artivio/Artivio.mp4" type="video/mp4">
+              </video>
             </div>
             <div class="project-cats">Branding • UX/UI • Logo • Site web</div>
             <h3 class="project-name"><span class="project-name-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span><span class="project-name-mask"><span class="project-name-text">Artivio</span></span></h3>
@@ -1002,6 +1024,22 @@
       end: 'bottom top',
       scrub: true,
     },
+  });
+})();
+</script>
+
+<script>
+(function() {
+  document.querySelectorAll('.project-card').forEach(card => {
+    const video = card.querySelector('.project-video');
+    if (!video) return;
+    card.addEventListener('mouseenter', () => {
+      video.play().catch(() => {});
+    });
+    card.addEventListener('mouseleave', () => {
+      video.pause();
+      video.currentTime = 0;
+    });
   });
 })();
 </script>
