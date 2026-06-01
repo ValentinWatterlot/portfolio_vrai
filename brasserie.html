@@ -212,10 +212,19 @@
       #btn-back { display: none; }
       .h-img-pair { flex-direction: column; height: auto; } .h-img-pair-item { height: 42vh; }
       .h-text-inner p, .h-text-body, .project-desc { font-size: 16px !important; }
+      .h-img-large { overflow: visible; height: auto; padding: 16px 0; }
+      .h-img-large img { height: auto; width: 100%; max-width: 320px; object-fit: contain; }
     }
     @media (max-width: 1280px) and (min-width: 1025px) {
       #header { padding: 0 120px; } .h-info { padding: 0 40px 0 120px; }
       #menu-overlay { padding: 80px 120px; } .menu-socials { right: 120px; } #scroll-hint { right: 120px; }
+    }
+    @media (max-width: 1024px) {
+      html { overflow-x: hidden; }
+    }
+    @media (pointer: coarse) {
+      #cursor-dot, #cursor-ring { display: none !important; }
+      body, a, button { cursor: auto !important; }
     }
   </style>
 </head>
@@ -407,9 +416,9 @@
 
       <!-- ── Panneau fin ── -->
       <div class="h-end">
-        <p class="h-end-next-name">Tous les projets</p>
-        <a href="projets.html" class="btn-end-back">
-          Voir tous les projets
+        <p class="h-end-next-name">Kits&Kids</p>
+        <a href="kits-kids.html" class="btn-end-back">
+          Voir le projet
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
         </a>
       </div>

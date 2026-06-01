@@ -676,6 +676,13 @@
       .footer-top { gap: 28px; }
       .footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; }
     }
+    @media (max-width: 1024px) {
+      html { overflow-x: hidden; }
+    }
+    @media (pointer: coarse) {
+      #cursor-dot, #cursor-ring { display: none !important; }
+      body, a, button { cursor: auto !important; }
+    }
   </style>
 </head>
 <body>

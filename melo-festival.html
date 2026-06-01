@@ -233,6 +233,13 @@
       #header { padding: 0 120px; } .h-info { padding: 0 40px 0 120px; }
       #menu-overlay { padding: 80px 120px; } .menu-socials { right: 120px; } #scroll-hint { right: 120px; }
     }
+    @media (max-width: 1024px) {
+      html { overflow-x: hidden; }
+    }
+    @media (pointer: coarse) {
+      #cursor-dot, #cursor-ring { display: none !important; }
+      body, a, button { cursor: auto !important; }
+    }
   </style>
 </head>
 <body>

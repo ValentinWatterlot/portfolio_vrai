@@ -701,7 +701,21 @@
       #header { padding: 0 24px; }
       .menu-socials { right: 24px; }
       #menu-overlay { padding: 80px 24px; }
-      .contact-page { padding: 100px 20px 40px; }
+      .menu-link { font-size: clamp(36px, 10vw, 64px); padding: 16px 0; }
+      .contact-page { padding: 100px 16px 40px; }
+      .contact-card { border-radius: 20px; }
+      .contact-left { padding: 36px 24px; gap: 24px; }
+      .contact-headline { font-size: clamp(26px, 7vw, 38px); }
+      .contact-sub { font-size: 14px; max-width: 100%; }
+      .detail-value { font-size: 14px; word-break: break-all; }
+      .contact-form-wrap { padding: 36px 24px; }
+    }
+    @media (max-width: 1024px) {
+      html { overflow-x: hidden; }
+    }
+    @media (pointer: coarse) {
+      #cursor-dot, #cursor-ring { display: none !important; }
+      body, a, button { cursor: auto !important; }
     }
   </style>
 </head>
